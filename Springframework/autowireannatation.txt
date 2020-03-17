@@ -1,0 +1,93 @@
+1)A2.java
+
+
+package autowireannoatation;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
+public class A2 {
+	@Autowired
+B1 b;
+A2()
+{
+	System.out.println("a is created");
+}
+public B1 getB1()
+{
+	return b;
+}
+public void setB1(B1 b)
+{
+	this.b=b;
+}
+void print()
+{
+	System.out.println("hello a");
+}
+void display()
+{
+	print();
+	b.print();
+}
+}
+
+
+
+2)A2B1test.java
+
+
+package autowireannoatation;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+public class A2B1test {
+public static void main(String[] args) {
+	ApplicationContext context=new  ClassPathXmlApplicationContext("autowireannoatation/a2b.xml");
+	 A2 a2=context.getBean("a2",A2.class);
+	 a2.display();
+	}
+}
+
+
+
+3)B1.java
+
+
+package autowireannoatation;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class B1 {
+B1()
+{
+	System.out.println("b is created");
+}
+void print()
+{
+	System.out.println("hello b");
+}
+}
+
+
+4)a2b.xml
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+xmlns:p="http://www.springframework.org/schema/p"
+xmlns:context="http://www.springframework.org/schema/context"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+<context:annotation-config/> 
+<context:component-scan base-package="autowireannoatation"></context:component-scan>
+</beans>
+
+

@@ -1,0 +1,95 @@
+1)Address.java
+
+
+package aggrigation;
+public class Address
+{
+	private String city;
+	private String state;
+	private String country; 
+public  Address(String city,String state,String country) {
+//super();
+	this.city=city;
+	this.state=state;
+	this.country=country;
+}
+public String toString()
+{
+	return city+""+state+""+country;
+}
+}
+
+
+2)EmpAddr
+
+
+
+package aggrigation;
+public class EmpAddr {
+	private int id;
+	private String name;
+	private Address address;//Aggregation
+	/*public EmpAddr()
+	{
+		System.out.println("def cons");
+	}*/
+	public EmpAddr(int id,String name,Address address)
+	{
+		//super();
+		this.id=id;
+		this.name=name;
+		this.address=address;
+	}
+void show()
+{
+	System.out.println(id  +"     "+   name+    "    "+   address);
+	//System.out.println(address.toString());
+}
+}
+
+
+3)TestByDepInjConsAggr.java
+
+
+
+package aggrigation;
+
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.xml.XmlBeanFactory;
+import org.springframework.core.io.*;
+public class TestByDepInjConsAggr {
+	public static void main(String[] args) {
+		Resource resource=new ClassPathResource("aggrigation/appDepByConsAggr.xml");
+		BeanFactory factory=new XmlBeanFactory(resource);
+		EmpAddr s=(EmpAddr)factory.getBean("e");
+       s.show();
+}
+}
+
+
+
+
+4)appDepByConsAggr.xml
+
+
+
+<?xml version="1.0"
+encoding="UTF-8"?>
+
+<beans
+xmlns="http://www.springframework.org/schema/beans"
+
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:p="http://wwww.springframework.org/schema/p"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+<bean id="a1" class="aggrigation.Address">
+<constructor-arg value="chennai"></constructor-arg>
+<constructor-arg value="tamilnadu"></constructor-arg>
+<constructor-arg value="india"></constructor-arg>
+</bean>
+<bean id="e" class="aggrigation.EmpAddr">
+<constructor-arg value="12" type="int"></constructor-arg>
+<constructor-arg value="yashika"></constructor-arg>
+<constructor-arg><ref bean="a1"/></constructor-arg></bean>
+</beans>

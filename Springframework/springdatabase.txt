@@ -1,0 +1,162 @@
+1)Employee.java
+
+
+package springdatabase;
+public class Employee {
+	private int empID;
+	private String name;
+	private int salary;
+	private String dept;
+	
+	public int getEmpId()
+	{
+		return empID;
+	}
+	public void setEmpId(int empId)
+	{
+		this.empID=empId;
+	}
+	public String getName()
+	{
+		return name;
+	}
+	public void setName(String name)
+	{
+		this.name=name;
+	}
+	public int getSalary()
+	{
+		return salary;
+	}
+	public void setSalary(int salary)
+	{
+		this.salary=salary;
+	}
+	public String getDept() {
+		return dept;
+	}
+	public void setDept(String dept) {
+		this.dept = dept;
+	}
+
+}
+
+
+2)EmployeeDao
+
+
+
+package springdatabase;
+public interface EmployeeDao
+{
+	public Employee findEmployeeById(int empId);
+
+}
+
+
+
+
+3)EmployeeImp1.java
+
+
+
+package springdatabase;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.sql.DataSource;
+
+public class EmployeeImp1 implements EmployeeDao {
+	private DataSource dataSource;
+	public void setDataSource(DataSource dataSource)
+	{
+		this.dataSource=dataSource;
+	}
+@Override
+public Employee findEmployeeById(int empId)
+{
+	Employee emp=null;
+	String query="select * from Employee where empID=?";
+	Connection con=null;
+	PreparedStatement preStmt=null;
+	ResultSet rsltSet=null;
+	try
+	{
+		con=dataSource.getConnection();
+		preStmt=con.prepareStatement(query);
+		preStmt.setInt(1,empId);
+		rsltSet=preStmt.executeQuery();
+		emp=new Employee();
+		while(rsltSet.next())
+		{
+			emp.setEmpId(empId);
+		    emp.setName(rsltSet.getString("name"));
+		    emp.setSalary(rsltSet.getInt("salary"));
+		    emp.setDept(rsltSet.getString("dept"));
+	}
+	}
+	catch(SQLException e)
+	{
+		e.printStackTrace();
+	}
+	finally
+	{
+		try
+		{
+			if(rsltSet!=null)rsltSet.close();
+			if(preStmt!=null)preStmt.close();
+		}
+		catch(Exception ex) {
+		}
+	}
+	return emp;
+}
+}
+
+
+
+
+4)jdbcDemo.java
+
+
+
+package springdatabase;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+public class jdbcDemo {
+public static void main(String a[]) {
+	//String conFile="springdatabase/sql.xml";
+	ConfigurableApplicationContext context=new ClassPathXmlApplicationContext("springdatabase/sql.xml");
+	EmployeeDao empDao=(EmployeeDao)context.getBean("employeeDAO");
+	Employee emp=empDao.findEmployeeById(846712);
+	System.out.println(emp.getName()+"|"+emp.getSalary()+"|"+emp.getDept());
+	} 
+}
+
+
+
+
+5)sql.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+xmlns="http://www.springframework.org/schema/beans"
+
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:p="http://wwww.springframework.org/schema/p"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+<bean id="dataSource"
+class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+<property name="url" value="jdbc:mysql://localhost:3306/aravind"/>
+<property name="username" value="root"/>
+<property name="password" value="root"/>
+</bean>
+<bean id="employeeDAO" class="springdatabase.EmployeeImp1">
+<property name="dataSource" ref="dataSource"/>
+</bean>
+</beans>
+

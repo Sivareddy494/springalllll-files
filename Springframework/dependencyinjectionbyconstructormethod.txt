@@ -1,0 +1,79 @@
+1)Employe1.java
+
+
+package dependencyinjectionbyconstructormethod;
+public class Employe1 {
+private int id=20;
+private String name;
+public Employe1()
+{
+	System.out.println("def cons");
+}
+public Employe1(int id)
+{
+	this.id=id;
+}
+public Employe1(String name)
+{
+	this.name=name;
+}
+public Employe1(int id,String name)
+{
+	this.id=id;
+	this.name=name;
+}
+void show()
+{
+	System.out.println(id+""+name);
+}
+}
+
+2)TestByDepInjCons.java
+
+
+
+package dependencyinjectionbyconstructormethod;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.xml.XmlBeanFactory;
+import org.springframework.core.io.*;
+public class TestByDepInjCons {
+	public static void main(String[] args) {
+org.springframework.core.io.Resource r=new ClassPathResource("dependencyinjectionbyconstructormethod/appDepByCons.xml");
+		BeanFactory factory=new XmlBeanFactory(r);
+		Employe1 s=(Employe1)factory.getBean("e5");
+		s.show();
+		Employe1 s1=(Employe1)factory.getBean("e6");
+		s1.show();
+		Employe1 s2=(Employe1)factory.getBean("e7");
+		s2.show();
+	}
+}
+
+
+
+3)appDepByCons.xml
+
+
+
+
+<?xml version="1.0"
+encoding="UTF-8"?>
+
+<beans
+xmlns="http://www.springframework.org/schema/beans"
+
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:p="http://wwww.springframework.org/schema/p"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+<bean id="e5" class="dependencyinjectionbyconstructormethod.Employe1">
+<constructor-arg value="10" type="int"></constructor-arg>
+</bean>
+<bean id="e6" class="dependencyinjectionbyconstructormethod.Employe1">
+<constructor-arg value="Rad" type="String"></constructor-arg>
+</bean>
+<bean id="e7" class="dependencyinjectionbyconstructormethod.Employe1">
+<constructor-arg value="10" type="int"></constructor-arg>
+<constructor-arg value="Red" type="String"></constructor-arg>
+</bean>
+</beans>
